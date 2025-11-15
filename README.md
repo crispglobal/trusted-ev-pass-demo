@@ -1,6 +1,6 @@
 # Trusted EV Pass Demo
 
-A modern React application demonstrating voice-controlled EV charging station navigation and verification flows.
+React application demonstrating voice-controlled EV charging station navigation and verification flows presenting Denso DID concept
 
 ## 🚀 Quick Start
 
