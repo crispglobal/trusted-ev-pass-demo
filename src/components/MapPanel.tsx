@@ -5,12 +5,12 @@ interface MapPanelProps {
   stage: "idle" | "listening" | "processing" | "navigating";
 }
 
-// Mock EV charging stations positioned on the static map
+// Mock EV charging stations positioned on the static map (Kivenlahti area)
 const evStations = [
-  { id: 1, name: "Denso Charging Station", position: { top: "45%", left: "52%" }, hasCoffee: true, selected: true },
-  { id: 2, name: "K-Lataus Kamppi", position: { top: "48%", left: "35%" }, hasCoffee: false, selected: false },
-  { id: 3, name: "ABC Lataus", position: { top: "35%", left: "65%" }, hasCoffee: true, selected: false },
-  { id: 4, name: "Virta Charging Hub", position: { top: "58%", left: "25%" }, hasCoffee: false, selected: false },
+  { id: 1, name: "Hybridiarena Hype", position: { top: "48%", left: "48%" }, hasCoffee: true, selected: true },
+  { id: 2, name: "K-Market Kivenlahti", position: { top: "65%", left: "62%" }, hasCoffee: false, selected: false },
+  { id: 3, name: "Kivenlahti Squash", position: { top: "68%", left: "75%" }, hasCoffee: true, selected: false },
+  { id: 4, name: "Koirien Uimaranta", position: { top: "72%", left: "28%" }, hasCoffee: false, selected: false },
 ];
 
 const MapPanel = ({ stage }: MapPanelProps) => {
@@ -32,28 +32,16 @@ const MapPanel = ({ stage }: MapPanelProps) => {
 
       {/* Map Container */}
       <div className="relative h-96 bg-gradient-to-br from-muted to-secondary overflow-hidden">
-        {/* Static Map Background - Street Pattern */}
+        {/* Static Map Background - Real Map Image */}
         <div className="absolute inset-0">
-          {/* Grid pattern for streets */}
-          <div className="absolute inset-0 opacity-20">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
-                  <path d="M 80 0 L 0 0 0 80" fill="none" stroke="hsl(var(--border))" strokeWidth="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-          </div>
+          <img 
+            src="/mapBackground.png" 
+            alt="Map of Kivenlahti area" 
+            className="w-full h-full object-cover"
+          />
           
-          {/* Mock street lines */}
-          <svg className="absolute inset-0 opacity-30" width="100%" height="100%">
-            <line x1="0" y1="40%" x2="100%" y2="40%" stroke="hsl(var(--muted-foreground))" strokeWidth="3" />
-            <line x1="0" y1="60%" x2="100%" y2="60%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" />
-            <line x1="30%" y1="0" x2="30%" y2="100%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" />
-            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="hsl(var(--muted-foreground))" strokeWidth="3" />
-            <line x1="70%" y1="0" x2="70%" y2="100%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" />
-          </svg>
+          {/* Subtle overlay for better contrast */}
+          <div className="absolute inset-0 bg-background/5"></div>
 
           {/* EV Station Markers */}
           {evStations.map((station) => (
@@ -135,9 +123,9 @@ const MapPanel = ({ stage }: MapPanelProps) => {
                 <div className="space-y-1 flex-1">
                   <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <Zap className="w-5 h-5 text-accent" />
-                    Denso Charging Station
+                    Hybridiarena Hype
                   </h3>
-                  <p className="text-sm text-muted-foreground">Mannerheimintie 12, Helsinki</p>
+                  <p className="text-sm text-muted-foreground">Höyrylaivantie, Kivenlahti</p>
                 </div>
               </div>
               
