@@ -1,101 +1,19 @@
-import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { MapPin, Navigation, Coffee, Zap } from "lucide-react";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 interface MapPanelProps {
   stage: "idle" | "listening" | "processing" | "navigating";
 }
 
-// Mock EV charging stations in Helsinki
+// Mock EV charging stations positioned on the static map
 const evStations = [
-  { id: 1, name: "Denso Charging Station", coords: [24.9458, 60.1695], hasCoffee: true, selected: true },
-  { id: 2, name: "K-Lataus Kamppi", coords: [24.9320, 60.1680], hasCoffee: false, selected: false },
-  { id: 3, name: "ABC Lataus", coords: [24.9650, 60.1750], hasCoffee: true, selected: false },
-  { id: 4, name: "Virta Charging Hub", coords: [24.9200, 60.1620], hasCoffee: false, selected: false },
+  { id: 1, name: "Denso Charging Station", position: { top: "45%", left: "52%" }, hasCoffee: true, selected: true },
+  { id: 2, name: "K-Lataus Kamppi", position: { top: "48%", left: "35%" }, hasCoffee: false, selected: false },
+  { id: 3, name: "ABC Lataus", position: { top: "35%", left: "65%" }, hasCoffee: true, selected: false },
+  { id: 4, name: "Virta Charging Hub", position: { top: "58%", left: "25%" }, hasCoffee: false, selected: false },
 ];
 
 const MapPanel = ({ stage }: MapPanelProps) => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const markers = useRef<mapboxgl.Marker[]>([]);
-  const [mapboxToken, setMapboxToken] = useState("");
-  const [tokenSubmitted, setTokenSubmitted] = useState(false);
-
-  useEffect(() => {
-    if (!mapContainer.current || !tokenSubmitted || !mapboxToken) return;
-
-    // Initialize map
-    mapboxgl.accessToken = mapboxToken;
-    
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/dark-v11",
-      center: [24.9458, 60.1695], // Helsinki center
-      zoom: 12,
-    });
-
-    map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
-
-    // Add EV station markers
-    evStations.forEach((station) => {
-      const el = document.createElement("div");
-      el.className = "ev-marker";
-      el.style.width = station.selected ? "40px" : "30px";
-      el.style.height = station.selected ? "40px" : "30px";
-      el.style.borderRadius = "50%";
-      el.style.backgroundColor = station.selected ? "hsl(var(--accent))" : "hsl(var(--primary))";
-      el.style.border = "3px solid hsl(var(--background))";
-      el.style.cursor = "pointer";
-      el.style.display = "flex";
-      el.style.alignItems = "center";
-      el.style.justifyContent = "center";
-      el.style.boxShadow = station.selected ? "0 0 20px hsl(var(--accent))" : "0 0 10px hsl(var(--primary))";
-      
-      const icon = document.createElement("div");
-      icon.innerHTML = "⚡";
-      icon.style.fontSize = station.selected ? "20px" : "16px";
-      el.appendChild(icon);
-
-      const marker = new mapboxgl.Marker(el)
-        .setLngLat(station.coords as [number, number])
-        .setPopup(
-          new mapboxgl.Popup({ offset: 25 })
-            .setHTML(`
-              <div style="color: hsl(var(--foreground)); padding: 4px;">
-                <strong>${station.name}</strong><br/>
-                ${station.hasCoffee ? "☕ Coffee available" : "No coffee"}
-              </div>
-            `)
-        )
-        .addTo(map.current);
-
-      markers.current.push(marker);
-    });
-
-    return () => {
-      markers.current.forEach(marker => marker.remove());
-      markers.current = [];
-      map.current?.remove();
-    };
-  }, [tokenSubmitted, mapboxToken]);
-
-  // Animate to selected station when navigating
-  useEffect(() => {
-    if (stage === "navigating" && map.current) {
-      const selectedStation = evStations.find(s => s.selected);
-      if (selectedStation) {
-        map.current.flyTo({
-          center: selectedStation.coords as [number, number],
-          zoom: 14,
-          duration: 2000,
-        });
-      }
-    }
-  }, [stage]);
 
   return (
     <Card className="bg-card border-border overflow-hidden h-fit lg:sticky lg:top-24">
@@ -113,41 +31,78 @@ const MapPanel = ({ stage }: MapPanelProps) => {
       </div>
 
       {/* Map Container */}
-      <div className="relative h-96 bg-gradient-to-br from-muted to-secondary">
-        {!tokenSubmitted ? (
-          <div className="absolute inset-0 flex items-center justify-center p-6 z-10 bg-card/95 backdrop-blur-sm">
-            <div className="w-full max-w-md space-y-4">
-              <div className="text-center space-y-2">
-                <MapPin className="w-12 h-12 text-primary mx-auto" />
-                <h3 className="text-lg font-semibold text-foreground">Enter Mapbox Token</h3>
-                <p className="text-sm text-muted-foreground">
-                  Get your free token at{" "}
-                  <a href="https://mapbox.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                    mapbox.com
-                  </a>
-                </p>
-              </div>
-              <div className="space-y-2">
-                <Input
-                  type="text"
-                  placeholder="pk.eyJ1IjoiZXhhbXBsZS..."
-                  value={mapboxToken}
-                  onChange={(e) => setMapboxToken(e.target.value)}
-                  className="bg-background border-border"
-                />
-                <Button
-                  onClick={() => setTokenSubmitted(true)}
-                  disabled={!mapboxToken}
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                >
-                  Load Map
-                </Button>
+      <div className="relative h-96 bg-gradient-to-br from-muted to-secondary overflow-hidden">
+        {/* Static Map Background - Street Pattern */}
+        <div className="absolute inset-0">
+          {/* Grid pattern for streets */}
+          <div className="absolute inset-0 opacity-20">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+                  <path d="M 80 0 L 0 0 0 80" fill="none" stroke="hsl(var(--border))" strokeWidth="1"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+          </div>
+          
+          {/* Mock street lines */}
+          <svg className="absolute inset-0 opacity-30" width="100%" height="100%">
+            <line x1="0" y1="40%" x2="100%" y2="40%" stroke="hsl(var(--muted-foreground))" strokeWidth="3" />
+            <line x1="0" y1="60%" x2="100%" y2="60%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" />
+            <line x1="30%" y1="0" x2="30%" y2="100%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" />
+            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="hsl(var(--muted-foreground))" strokeWidth="3" />
+            <line x1="70%" y1="0" x2="70%" y2="100%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" />
+          </svg>
+
+          {/* EV Station Markers */}
+          {evStations.map((station) => (
+            <div
+              key={station.id}
+              className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300"
+              style={{
+                top: station.position.top,
+                left: station.position.left,
+                zIndex: station.selected ? 20 : 10,
+              }}
+            >
+              <div
+                className={`
+                  rounded-full flex items-center justify-center
+                  border-2 border-background cursor-pointer
+                  transition-all duration-300
+                  ${station.selected 
+                    ? 'w-10 h-10 bg-accent shadow-[0_0_20px_hsl(var(--accent))] animate-pulse' 
+                    : 'w-8 h-8 bg-primary shadow-[0_0_10px_hsl(var(--primary))] hover:scale-110'
+                  }
+                `}
+                title={`${station.name}${station.hasCoffee ? ' - Coffee available' : ''}`}
+              >
+                <Zap className={`${station.selected ? 'w-5 h-5' : 'w-4 h-4'} text-background`} fill="currentColor" />
               </div>
             </div>
-          </div>
-        ) : null}
+          ))}
 
-        <div ref={mapContainer} className="absolute inset-0" />
+          {/* Navigation Route Line (only when navigating) */}
+          {stage === "navigating" && (
+            <svg className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
+              <defs>
+                <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.8" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M 10% 90% Q 30% 50%, 52% 45%"
+                stroke="url(#routeGradient)"
+                strokeWidth="4"
+                fill="none"
+                strokeDasharray="10,5"
+                className="animate-fade-in"
+              />
+            </svg>
+          )}
+        </div>
 
         {/* Overlay content based on stage */}
         {stage === "idle" || stage === "listening" ? (
