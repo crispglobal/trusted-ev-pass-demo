@@ -1,73 +1,110 @@
-# Welcome to your Lovable project
+# Trusted EV Pass Demo
 
-## Project info
+A modern React application demonstrating voice-controlled EV charging station navigation and verification flows.
 
-**URL**: https://lovable.dev/projects/5147ac7a-9942-4389-9ee3-cea52bfc5463
+## 🚀 Quick Start
 
-## How can I edit this code?
+### Prerequisites
 
-There are several ways of editing your application.
+- **Node.js** (v16 or higher) and **npm** installed
+- Recommended: [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/5147ac7a-9942-4389-9ee3-cea52bfc5463) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### Installation & Running Locally
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Step 1: Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Step 2: Navigate to the project directory
+cd trusted-ev-pass-demo
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Step 3: Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Available Scripts
 
-**Use GitHub Codespaces**
+- **`npm run dev`** - Start development server with hot-reload
+- **`npm run build`** - Build for production
+- **`npm run build:dev`** - Build in development mode
+- **`npm run preview`** - Preview production build locally
+- **`npm run lint`** - Run ESLint to check code quality
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🛠️ Tech Stack
 
-## What technologies are used for this project?
+This project is built with modern web technologies:
 
-This project is built with:
+- **[Vite](https://vitejs.dev/)** - Fast build tool and dev server
+- **[React 18](https://react.dev/)** - UI library
+- **[TypeScript](https://www.typescriptlang.org/)** - Type safety
+- **[shadcn/ui](https://ui.shadcn.com/)** - Beautiful UI components
+- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
+- **[React Router](https://reactrouter.com/)** - Client-side routing
+- **[Lucide React](https://lucide.dev/)** - Icon library
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📁 Project Structure
 
-## How can I deploy this project?
+```
+trusted-ev-pass-demo/
+├── public/              # Static assets
+│   └── mapBackground.png
+├── src/
+│   ├── components/      # Reusable components
+│   │   ├── ui/         # shadcn/ui components
+│   │   ├── MapPanel.tsx
+│   │   ├── VoiceAssistant.tsx
+│   │   └── VerificationFlow.tsx
+│   ├── pages/          # Page components
+│   │   ├── Home.tsx
+│   │   ├── Scenario1.tsx
+│   │   └── Scenario2.tsx
+│   ├── lib/            # Utility functions
+│   └── main.tsx        # Application entry point
+└── package.json
+```
 
-Simply open [Lovable](https://lovable.dev/projects/5147ac7a-9942-4389-9ee3-cea52bfc5463) and click on Share -> Publish.
+## 🚢 Deployment
 
-## Can I connect a custom domain to my Lovable project?
+### Build for Production
 
-Yes, you can!
+```sh
+npm run build
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+The built files will be in the `dist/` directory, ready to be deployed to any static hosting service:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- **Vercel**: `vercel deploy`
+- **Netlify**: Drag and drop the `dist` folder
+- **GitHub Pages**: Configure with GitHub Actions
+- **AWS S3**: Upload `dist` folder to S3 bucket
+
+### Preview Production Build
+
+```sh
+npm run preview
+```
+
+## 📝 Features
+
+- **Scenario 1**: Voice-controlled EV charging station navigation
+- **Scenario 2**: Identity verification flow
+- Interactive map with charging station markers
+- Real-time voice assistant simulation
+- Modern, responsive UI design
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is available for demonstration purposes.
